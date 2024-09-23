@@ -88,7 +88,7 @@ Todos os movimentos e verificações de sensores do robô são registrados em um
 
 ## 🎮 Exemplo de Execução
 
-### Com Vizualidaro
+### Com Vizualizador
 Durante a execução, e você verá a movimentação do robô como um quadrado vermelho e a posição do humano como um quadrado azul.
 
 ![Print Com Vizualizador](./print_vizualizador.png)
