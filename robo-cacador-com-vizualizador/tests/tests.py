@@ -9,7 +9,6 @@ from labirinto import Labirinto
 class TestRoboCacadorComLabirintoTxt(unittest.TestCase):
 
     def setUp(self):
-        # Carregar o labirinto do arquivo 'labirinto.txt'
         self.labirinto = Labirinto.carregar_labirinto('/home/joaosoares/robo-cacador/robo-cacador-com-vizualizador/tests/labirinto.txt')
         self.robo = RoboCacador(self.labirinto)
 
@@ -50,14 +49,12 @@ class TestRoboCacadorComLabirintoTxt(unittest.TestCase):
     def test_alarme_beco_sem_saida_apos_coleta(self):
         """Testa se o alarme dispara ao entrar em um beco sem saída após coletar o humano"""
         self.robo.humano_coletado = True
-        # Ajustar para uma posição onde o robô está cercado por paredes em três direções
-        self.robo.pos_robo = (3, 1)  # Posição cercada por paredes
+        # Ajustar a posição do robô para um beco sem saída real
+        self.robo.pos_robo = (9, 3)  # Exemplo de beco sem saída no labirinto
         sensores = self.robo.verificar_sensores()
         self.assertEqual(sensores['frente'], 'PAREDE')
         self.assertEqual(sensores['esquerda'], 'PAREDE')
         self.assertEqual(sensores['direita'], 'PAREDE')  # Verifica se é um beco sem saída
-
-
 
     def test_alarme_ejetar_sem_humano(self):
         """Testa se o alarme dispara ao tentar ejetar sem o humano"""
