@@ -175,19 +175,15 @@ class RoboResgate:
                 self.desenhar_labirinto(self.canvas)
                 self.canvas.after(200)
 
-            # Pegar o humano independentemente da posição
-            self.humano_coletado = True
-            self.registrar_comando('P', sensores)
-            print("Humano coletado!")
-            return
+            if not self.humano_coletado:
+                self.humano_coletado = True
+                self.registrar_comando('P', sensores)  # Registrar coleta do humano
+                print("Humano coletado!")
+                return
 
         # Caminho até o humano
         caminho_ate_humano = self.a_estrela(self.pos_robo, self.pos_humano)
         if caminho_ate_humano:
-            if len(caminho_ate_humano) < 2:
-                print("Erro: Caminho até o humano é muito curto.")
-                return
-
             # Mova até a posição anterior ao humano
             posicao_antes_humano = caminho_ate_humano[-2]
             
@@ -196,8 +192,14 @@ class RoboResgate:
                 self.pos_robo = posicao
                 sensores = self.verificar_sensores()
 
-                if sensores['frente'] == 'PAREDE':
-                    print("Cuidado, não va para frente, tem uma parede!")
+                if self.pos_robo == 'PAREDE':
+                    print("Atenção, voce bateu em uma parede!!")
+                    
+                if sensores['frente'] == 'HUMANO':
+                    print("Cuidado, vá com calma, tem um humano a frente!") 
+                    
+                if self.pos_robo == 'HUMANO':
+                    print("Atenção, voce bateu em um humano!")     
 
                 self.registrar_comando('A', sensores)
                 self.canvas.update()
@@ -208,7 +210,6 @@ class RoboResgate:
             self.ajustar_direcao(posicao_antes_humano)
             self.pos_robo = posicao_antes_humano
             sensores = self.verificar_sensores()
-            self.registrar_comando('A', sensores)
             self.canvas.update()
             self.desenhar_labirinto(self.canvas)
             self.canvas.after(200)
@@ -217,38 +218,35 @@ class RoboResgate:
             while not self.verificar_se_frente_do_humano():
                 self.girar_robo()
                 sensores = self.verificar_sensores()  # Atualizar sensores após girar
-                self.registrar_comando('G', sensores)
                 self.canvas.update()
                 self.desenhar_labirinto(self.canvas)
                 self.canvas.after(200)
 
-            # Pegar o humano sem a verificação de posição
-            self.humano_coletado = True
-            self.registrar_comando('P', sensores)
-            print("Humano coletado!")
+            if not self.humano_coletado:
+                self.humano_coletado = True
+                self.registrar_comando('P', sensores)  # Registrar coleta do humano
+                print("Humano coletado!")
 
-            # Voltar para a entrada
-            caminho_de_volta = self.a_estrela(self.pos_robo, self.encontrar_entrada())
-            if caminho_de_volta:
-                for posicao in caminho_de_volta:
-                    self.ajustar_direcao(posicao)
-                    self.pos_robo = posicao
-                    sensores = self.verificar_sensores()
+        # Voltar para a entrada
+        caminho_de_volta = self.a_estrela(self.pos_robo, self.encontrar_entrada())
+        if caminho_de_volta:
+            for posicao in caminho_de_volta:
+                self.ajustar_direcao(posicao)
+                self.pos_robo = posicao
+                sensores = self.verificar_sensores()
 
-                    if sensores['frente'] == 'PAREDE' and sensores['esquerda'] == 'PAREDE' and sensores['direita'] == 'PAREDE':
-                        print("Erro: Robô entrou em um beco sem saída com o humano!")
-                        return
+                if sensores['frente'] == 'PAREDE' and sensores['esquerda'] == 'PAREDE' and sensores['direita'] == 'PAREDE':
+                    print("Erro: Robô entrou em um beco sem saída com o humano!")
+                    return
 
-                    self.registrar_comando('A', sensores)
-                    self.canvas.update()
-                    self.desenhar_labirinto(self.canvas)
-                    self.canvas.after(200)
+                self.registrar_comando('A', sensores)
+                self.canvas.update()
+                self.desenhar_labirinto(self.canvas)
+                self.canvas.after(200)
 
-                if self.humano_coletado:
-                    self.registrar_comando('E', sensores)
-                    print("Humano resgatado!")
-                else:
-                    print("Erro: Tentativa de ejeção sem humano!")
+            if self.humano_coletado:
+                self.registrar_comando('E', sensores)
+                print("Humano resgatado!")
         else:
             print("Caminho não encontrado.")
 
