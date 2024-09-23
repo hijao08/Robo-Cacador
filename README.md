@@ -32,7 +32,7 @@ cd robo-cacador
 #### pode escolher se quer
 - com vizualizador
 ```bash
-cd robo-cacador-cem-vizualizador
+cd robo-cacador-com-vizualizador
 ```
 - sem vizualizador
 ```bash
