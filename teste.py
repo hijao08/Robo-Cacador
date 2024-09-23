@@ -252,6 +252,9 @@ class RoboResgate:
                 print("Humano resgatado!")
         else:
             print("Caminho não encontrado.")
+            print("Não existe caminho até o humano")
+            self.registrar_comando("CAMINHO NÃO ENCONTRADO", sensores)
+            self.registrar_comando("NÃO EXISTE CAMINHO ATÉ O HUMANO", sensores)
 
         self.salvar_log()
 
