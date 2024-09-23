@@ -71,6 +71,34 @@ class TestRoboCacadorComLabirintoTxt(unittest.TestCase):
         self.robo.pos_robo = (1, 1)  # Posição longe do humano
         sensores = self.robo.verificar_sensores()
         self.assertNotEqual(sensores['frente'], 'HUMANO')  # Verifica se não há humano à frente
+        
+    def test_retorno_a_entrada(self):
+        """Testa se o robô retorna corretamente à entrada após coletar o humano"""
+        self.robo.mover_robo()
+        self.assertEqual(self.robo.pos_robo, self.robo.encontrar_entrada())  # Verifica se o robô retornou à entrada
+        
+    def test_sem_caminho_ate_humano(self):
+        """Testa se o algoritmo A* retorna None quando o humano está inacessível"""
+        self.robo.labirinto[1][3] = '*'  # Bloqueia o caminho para o humano
+        caminho = self.robo.a_estrela(self.robo.encontrar_entrada(), self.robo.encontrar_humano())
+        self.assertIsNone(caminho)  # Verifica se o caminho é None
+
+    def test_giro_deteccao_obstaculo(self):
+        """Testa se o robô detecta um obstáculo imediatamente após girar"""
+        self.robo.pos_robo = (2, 3)  # Posição próxima a uma parede
+        self.robo.direcao_robo = 'north'
+        self.robo.girar_robo()  # Robô gira para leste (direita)
+        sensores = self.robo.verificar_sensores()
+        self.assertEqual(sensores['frente'], 'PAREDE')  # Verifica se detecta a parede após o giro
+
+    def test_sensores_sem_obstaculos(self):
+        """Testa se os sensores detectam corretamente que não há obstáculos ou humanos"""
+        self.robo.pos_robo = (19, 11)  # Posição no meio do labirinto, sem obstáculos imediatos
+        sensores = self.robo.verificar_sensores()
+        self.assertEqual(sensores['frente'], 'VAZIO')
+        self.assertEqual(sensores['esquerda'], 'VAZIO')
+        self.assertEqual(sensores['direita'], 'VAZIO')
+
 
 if __name__ == '__main__':
     unittest.main()
