@@ -166,7 +166,7 @@ class RoboResgate:
         
         # Verifica se o robô está adjacente ao humano
         if self.verificar_se_adjacente(self.pos_robo, self.pos_humano):
-            # Alinhar-se e pegar o humano
+            # Alinhar-se e verificar se está na frente
             while not self.verificar_se_frente_do_humano():
                 self.girar_robo()
                 sensores = self.verificar_sensores()  # Atualizar sensores após girar
@@ -199,7 +199,7 @@ class RoboResgate:
                     print("Cuidado, vá com calma, tem um humano a frente!") 
                     
                 if self.pos_robo == 'HUMANO':
-                    print("Atenção, voce bateu em um humano!")     
+                    print("Atenção, voce bateu em um humano!")
 
                 self.registrar_comando('A', sensores)
                 self.canvas.update()
@@ -225,6 +225,9 @@ class RoboResgate:
             if not self.humano_coletado:
                 self.humano_coletado = True
                 self.registrar_comando('P', sensores)  # Registrar coleta do humano
+                if not self.verificar_se_frente_do_humano():
+                    print("Erro: O humano não está na frente do robô!")
+                    return
                 print("Humano coletado!")
 
         # Voltar para a entrada
