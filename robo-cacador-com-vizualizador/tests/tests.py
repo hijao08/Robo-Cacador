@@ -1,4 +1,8 @@
 import unittest
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from robo_cacador import RoboCacador
 from labirinto import Labirinto
 
@@ -6,7 +10,7 @@ class TestRoboCacadorComLabirintoTxt(unittest.TestCase):
 
     def setUp(self):
         # Carregar o labirinto do arquivo 'labirinto.txt'
-        self.labirinto = Labirinto.carregar_labirinto('tests/labirinto.txt')
+        self.labirinto = Labirinto.carregar_labirinto('/home/joaosoares/robo-cacador/robo-cacador-com-vizualizador/tests/labirinto.txt')
         self.robo = RoboCacador(self.labirinto)
 
     def test_encontrar_entrada(self):
