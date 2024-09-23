@@ -8,7 +8,7 @@ def iniciar_simulacao():
         return
 
     root = tk.Tk()
-    root.title("Simulação do Robô de Resgate")
+    root.title("Simulação do Robô de Caçador")
     size = 40
 
     linhas, colunas = len(labirinto), len(labirinto[0])

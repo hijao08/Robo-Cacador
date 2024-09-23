@@ -165,9 +165,11 @@ class RoboCacador:
         self.direcao_robo = direcoes[(idx_atual + 1) % 4]
         sensores = self.verificar_sensores()
         self.registrar_comando('G', sensores)
-        self.canvas.update()
-        self.desenhar_labirinto(self.canvas)
-        self.canvas.after(100)
+
+        if self.canvas is not None:
+            self.canvas.update()
+            self.desenhar_labirinto(self.canvas)
+            self.canvas.after(100)
 
     def mover_robo(self):
         sensores = self.verificar_sensores()
@@ -178,7 +180,7 @@ class RoboCacador:
         if caminho_ate_humano:
             # Mova até a posição anterior ao humano
             posicao_antes_humano = caminho_ate_humano[-2]
-            
+
             for posicao in caminho_ate_humano[:-1]:
                 self.ajustar_direcao(posicao)
                 self.pos_robo = posicao
@@ -194,25 +196,28 @@ class RoboCacador:
                     print("Atenção, voce bateu em um humano!")
 
                 self.registrar_comando('A', sensores)
-                self.canvas.update()
-                self.desenhar_labirinto(self.canvas)
-                self.canvas.after(100)
+                if self.canvas is not None:  # Verifica se o canvas existe antes de atualizar
+                    self.canvas.update()
+                    self.desenhar_labirinto(self.canvas)
+                    self.canvas.after(100)
 
             # Mover para a posição anterior ao humano
             self.ajustar_direcao(posicao_antes_humano)
             self.pos_robo = posicao_antes_humano
             sensores = self.verificar_sensores()
-            self.canvas.update()
-            self.desenhar_labirinto(self.canvas)
-            self.canvas.after(100)
+            if self.canvas is not None:
+                self.canvas.update()
+                self.desenhar_labirinto(self.canvas)
+                self.canvas.after(100)
 
             # Alinhar-se com o humano
             while not self.verificar_se_frente_do_humano():
                 self.girar_robo()
-                sensores = self.verificar_sensores()  # Atualizar sensores após girar
-                self.canvas.update()
-                self.desenhar_labirinto(self.canvas)
-                self.canvas.after(100)
+                sensores = self.verificar_sensores()
+                if self.canvas is not None:
+                    self.canvas.update()
+                    self.desenhar_labirinto(self.canvas)
+                    self.canvas.after(100)
 
             if not self.humano_coletado:
                 self.humano_coletado = True
@@ -231,16 +236,16 @@ class RoboCacador:
                 self.ajustar_direcao(posicao)
                 self.pos_robo = posicao
                 sensores = self.verificar_sensores()
-
                 if sensores['frente'] == 'PAREDE' and sensores['esquerda'] == 'PAREDE' and sensores['direita'] == 'PAREDE':
                     print("Erro: Robô entrou em um beco sem saída com o humano!")
                     return
 
                 self.registrar_comando('A', sensores)
-                self.canvas.update()
-                self.desenhar_labirinto(self.canvas)
-                self.canvas.after(100)
-                
+                if self.canvas is not None:
+                    self.canvas.update()
+                    self.desenhar_labirinto(self.canvas)
+                    self.canvas.after(100)
+
             if not self.humano_coletado:
                 print("Erro: Tentativa de ejetar sem o humano!")
                 self.registrar_comando('TENTATIVA FALHA DE EJETAR SEM HUMANO', sensores)
